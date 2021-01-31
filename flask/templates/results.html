@@ -7,8 +7,10 @@
           href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div>You entered {{ param1 }} and {{ param2 }}</div>
+    <div>You entered {{ params[0] }} and {{ params[1] }}</div>
 
     <div>Now the AI doctor will examine your patient...</div>
+
+    <div>Result:  {{ outcome }}</div>
 </body>
 </html>
