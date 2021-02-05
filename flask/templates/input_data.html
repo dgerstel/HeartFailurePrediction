@@ -8,6 +8,8 @@
 </head>
 <body>
 <h1>Heart failure prognostics</h1>
+
+<h2> Fill out the patient's data </h2>
 <p>
     Please enter the patient data below.<br>
     The algorithm will estimate probability of their passing away due to a heart
@@ -23,6 +25,10 @@
     {% endfor %}
     <input type=submit value="Submit" name="submit_btn">
 </form>
+
+<h2> Feature distributions for reference </h2>
+<img src="/static/features_distr.png" alt="Feature distributions for surviving and deceased patients">
+<img src="/static/binary_features_distr.png" alt="Feature distributions for surviving and deceased patients">
 
 </body>
 </html>
