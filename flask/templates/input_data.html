@@ -4,25 +4,25 @@
     <meta charset="UTF-8">
     <title>Patient data</title>
     <link rel="stylesheet"
-       href="{{ url_for('static', filename='style.css') }}">
+          href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Heart failure prognostics</h1>
-    <p>
+<h1>Heart failure prognostics</h1>
+<p>
     Please enter the patient data below.<br>
     The algorithm will estimate probability of their passing away due to a heart
     failure.
-    </p>
-    {% from "_formhelpers.html" import render_field %}
+</p>
+{% from "_formhelpers.html" import render_field %}
 
-    <form method="post" action="/results">
-        <d1>
-            {{ render_field(form.param1) }}
-        </d1>
-        <d1>
-            {{ render_field(form.param2) }}
-        </d1>
-        <input type=submit value="Submit" name="submit_btn">
-    </form>
+<form method="post" action="/results">
+    {% for field, label in zip(form.fields, labels) %}
+    <d1>
+        {{ render_field(field, label) }}
+    </d1>
+    {% endfor %}
+    <input type=submit value="Submit" name="submit_btn">
+</form>
+
 </body>
 </html>
