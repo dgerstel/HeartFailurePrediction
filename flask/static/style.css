@@ -1,3 +1,10 @@
 body {
      font-size: 2em;
 }
+
+form_widget_args = {
+    'description': {
+        'rows': 100,
+        'style': 'font-family: monospace;'
+    }
+}

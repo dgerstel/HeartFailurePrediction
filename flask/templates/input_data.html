@@ -9,26 +9,51 @@
 <body>
 <h1>Heart failure prognostics</h1>
 
-<h2> Fill out the patient's data </h2>
-<p>
-    Please enter the patient data below.<br>
-    The algorithm will estimate probability of their passing away due to a heart
-    failure.
-</p>
-{% from "_formhelpers.html" import render_field %}
+Welcome to the web app that predicts survival within 100 days after a heart failure episode.<br>
 
-<form method="post" action="/results">
-    {% for field, label in zip(form.fields, labels) %}
-    <d1>
-        {{ render_field(field, label) }}
-    </d1>
-    {% endfor %}
-    <input type=submit value="Submit" name="submit_btn">
-</form>
+<ul>
+    <li>On the left you can see distributions of characteristics of the patients that survived (blue) and passed away
+        (red)
+        within a follow-up period. On the bottom left you can also see charts of binary characteristics (e.g. whether
+        they had anaemia, 1=yes, 0=no)
+        combined with whether they survived ("0") or not ("1").
+    </li>
+    <li>
+        On the right you can fill out a form with your patient characteristics and the Machine Learning algorithm
+        (Random Forests)
+        will predict survival within the next 100 days. The algorithm has roughly 70% accuracy and is meant as a
+        demonstration only
+        and should not be used for real-life cases (which would require further checks from the data science and medical
+        perspectives).
+    </li>
+</ul>
 
-<h2> Feature distributions for reference </h2>
-<img src="/static/features_distr.png" alt="Feature distributions for surviving and deceased patients">
-<img src="/static/binary_features_distr.png" alt="Feature distributions for surviving and deceased patients">
+<div id="container" style="width:100%;">
+    <div id="left" style="float:left; width:50%;">
+        <h2> Feature distributions </h2>
+        <img src="/static/features_distr.png" alt="Feature distributions for surviving and deceased patients">
+        <img src="/static/binary_features_distr.png" alt="Feature distributions for surviving and deceased patients">
+    </div>
+    <div id="right" style="float:right; width:50%;">
+        <h2> Fill out the patient's data </h2>
+        <p>
+            Please enter the patient data below.<br>
+            The algorithm will estimate probability of their passing away due to a heart
+            failure.
+        </p>
+        {% from "_formhelpers.html" import render_field %}
+
+        <form method="post" action="/results">
+            {% for field, label in zip(form.fields, labels) %}
+            <d1>
+                {{ render_field(field, label) }}
+            </d1>
+            {% endfor %}
+            <input type=submit value="Submit" name="submit_btn">
+        </form>
+    </div>
+</div>
+
 
 </body>
 </html>

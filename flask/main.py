@@ -38,7 +38,7 @@ def classify(params):
     return [label[score] for score in y]
 
 class OneParamForm(FlaskForm):
-    field = TextAreaField("Value")#, [validators.DataRequired()])
+    field = TextAreaField("Value:", [validators.DataRequired()])
 
 
 class InputDataForm(FlaskForm):
