@@ -7,27 +7,18 @@
           href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<div id="container" style="width:100%;">
-  <div id="left" style="float:left; width:50%;">
-    <h2> Feature distributions </h2>
-    <img src="/static/features_distr.png" alt="Feature distributions for surviving and deceased patients">
-    <img src="/static/binary_features_distr.png" alt="Feature distributions for surviving and deceased patients">
- </div>
-  <div id="right" style="float:right; width:50%;">
-     <h2> Input data provided</h2>
-    {% for label, val in zip(features, fields) %}
-        <div> {{label}}: {{val}} </div>
-    {% endfor %}
+<h2> Feature distributions </h2>
+<img src="/static/features_distr.png" alt="Feature distributions for surviving and deceased patients">
+<img src="/static/binary_features_distr.png" alt="Feature distributions for surviving and deceased patients">
 
-
-    <br>
-    <h2> Result </h2>
-    <div>Now the AI doctor will examine your patient...</div>
-    <br>
-
-    <div>Result:  {{ outcome }}</div>
-</div>
-</div>
+<h2> Input data provided</h2>
+{% for label, val in zip(features, fields) %}
+<div> {{label}}: {{val}}</div>
+{% endfor %}
+<br>
+<h2> Result </h2>
+<div>Now the AI doctor will examine your patient...</div>
+<div>Result: {{ outcome }}</div>
 </body>
 </html>
 
