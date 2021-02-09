@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from wtforms import Form, TextAreaField, validators, FormField
-from wtforms.fields import FieldList
+from wtforms.fields import FieldList, SelectField, DecimalField
 from flask_wtf import FlaskForm
 
 import jinja2 # Needed for templates configuration
@@ -29,6 +29,13 @@ features = joblib.load(os.path.join(cur_dir, '..', 'jupyter',
 print("FEATURES", features)
 #features = features[:2] # debug
 
+# Boolean and non-boolean features are not intertwined (the booleans are at the end of the _features_).
+# This makes for an easy form display in input_data.html, where two loops are used for these categories.
+# One has to be careful to show them there in the correct order, required by the ML algorithm.
+bool_features = [name for name in features if features[name]['is_binary']]
+non_bool_features = [name for name in features if not features[name]['is_binary']]
+features['sex']['text'] = 'Male?' # temporary hack
+
 def classify(params):
     print("classify input shape:", params.shape)
     label = {1: 'death', 0: 'survive'}
@@ -37,40 +44,50 @@ def classify(params):
     y = clf.predict(df)
     return [label[score] for score in y]
 
-class OneParamForm(FlaskForm):
-    field = TextAreaField("Value:", [validators.DataRequired()])
+class BinaryParamForm(FlaskForm):
+    field = SelectField("", choices=[(1.0, "Yes"), (0.0, "No")])
 
+# class SexParamForm(FlaskForm):
+#     field = SelectField("", choices=[(1.0, "Male"), (0.0, "Female")])
+
+class OneParamForm(FlaskForm):
+    field = DecimalField("", [validators.DataRequired()])
+
+
+# class InputNonBinaryDataForm(FlaskForm):
+#     fields = FieldList(FormField(OneParamForm), min_entries=len(non_bool_features))
+#
+# class InputBinaryDataForm(FlaskForm):
+#     fields = FieldList(FormField(BinaryParamForm), min_entries=len(bool_features))
 
 class InputDataForm(FlaskForm):
-    fields = FieldList(FormField(OneParamForm), min_entries=len(features))
-
-    # def validate(self):
-    #     # TODO: implement validation (check if numerical) or use boolean, numerical form fields instead
-    #     # try:
-    #     #     float(self.param1.data)
-    #     #     float(self.param2.data)
-    #     # except ValueError:
-    #     #     print("You must enter numerical value!")
-    #     #     return redirect(url_for('index'))
-    #     #     #return False
-    #     # print("Super valid")
-    #     return super().validate()
-
-
+    non_bool_fields = FieldList(FormField(OneParamForm), min_entries=len(non_bool_features))
+    bool_fields = FieldList(FormField(BinaryParamForm), min_entries=len(bool_features))#-1) # minus sex category
+    #sex_fields = FieldList(FormField(BinaryParamForm), min_entries=1)
 
 @app.route('/')
 def index():
     form = InputDataForm()
-    return render_template('input_data.html', form=form, labels=features)
+    # non_bool_form = InputNonBinaryDataForm()
+    # bool_form = InputBinaryDataForm()
+    return render_template('input_data.html',
+                           form=form,
+                           non_bool_names=non_bool_features,
+                           bool_names=bool_features,
+                           labels=features)
 
 @app.route('/results', methods=['POST'])
 def results():
     print("Invoked results function")
     form = InputDataForm()
-    print("Form validate?", form.validate())
+    # non_bool_form = InputNonBinaryDataForm()
+    # bool_form = InputBinaryDataForm()
+    # print("Non bool Form validate?", non_bool_form.validate())
+    # print("bool Form validate?", bool_form.validate())
     if request.method == 'POST':# and form.validate():
         fields = request.form
-        field_contents = list({ x : fields[x] for x in fields.keys() if 'fields-' in x and 'token' not in x}.values())
+        print(fields)
+        field_contents = [fields[x] for x in fields.keys() if 'fields-' in x and 'token' not in x]
         print(field_contents)
         X = np.array([field_contents]).astype(float)
         print(X)

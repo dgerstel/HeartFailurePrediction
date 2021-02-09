@@ -44,9 +44,14 @@ Welcome to the web app that predicts survival within 100 days after a heart fail
         {% from "_formhelpers.html" import render_field %}
 
         <form method="post" action="/results">
-            {% for field, label in zip(form.fields, labels) %}
+            {% for field, label in zip(form.non_bool_fields, non_bool_names) %}
             <d1>
-                {{ render_field(field, label) }}
+                {{ render_field(field, labels[label]['text']) }}
+            </d1>
+            {% endfor %}
+            {% for field, label in zip(form.bool_fields, bool_names) %}
+            <d1>
+                {{ render_field(field, labels[label]['text']) }}
             </d1>
             {% endfor %}
             <input type=submit value="Submit" name="submit_btn">
